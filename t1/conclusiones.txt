@@ -1,0 +1,6 @@
+Este trabajo me ayudó a repasar la sintaxis semántica de HTML,
+ya que se vio rápidamente en clase. Además, tuve que investigar
+acerca de los formularios para encontrar la manera de manejarlos.
+También, encontré algunas herramientas (ya anticuadas) que permiten
+la manipulación del color de ciertos elementos en el lenguaje, tales como
+<font> y <bgcolor> ya que no se puede utilizar <style> (CSS).
