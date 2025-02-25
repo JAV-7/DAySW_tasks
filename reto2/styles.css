@@ -1,0 +1,24 @@
+.container p{
+    color: red;
+}
+
+.container > p{
+    color: blue;
+}
+
+h2 + p{
+    color:green;
+}
+
+h3 ~ p{
+    color:purple;
+}
+
+/* Conclusiones
+ * El uso de > afectO al primer pArrafo, sobrescribiendo el color declarado
+ * en el selector .container p.
+ * La diferencia entre + y ~ es que + afecta al hermano adyacente, al inmediato,
+ * mientras que el ~ a todos los hermanos de la secciOn.
+ * Si es dentro del mismo artIculo, sI, ya que estAn en el mismo nivel.
+ * En cambio, si es en otro nivel, no lo afectarA.
+ */
