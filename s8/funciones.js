@@ -1,5 +1,5 @@
 function generarNumero() {
-    return Math.floor((Math.random() * 10) + 2)
+    return Math.floor(((Math.random() * 100) % 12) + 1)
 }
 
 function mostrarNumero() {
@@ -12,12 +12,9 @@ function mostrarDados() {
 
     const display = document.getElementById("display");
     display.innerHTML = `<img src="https://cdn.pixabay.com/animation/2023/11/08/17/50/17-50-28-149_512.gif" alt= "dados"></img>`
-}
-
-function wait(){
     setTimeout(mostrarNumero, 2000);
+
 }
 
 document.getElementById("girar").addEventListener("click", mostrarDados);
-document.getElementById("girar").addEventListener("click", wait);
 console.log("Saludos desde javascript");
