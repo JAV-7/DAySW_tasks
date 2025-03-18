@@ -47,32 +47,30 @@
             </h3>
 
             <div class="row mb-3">
-                <label for="emailform" class="form-label d-flex justify-content-center text-secondary">Enter your email to start adopting!</label>
-                <div>&emsp;</div>
-                <div class="d-grid gap-2 justify-content-center">
-                    <div class="col-3"></div>
-                    <input
-                    type="email"
-                    class="form-control justify-content-center"
-                    name=""
-                    id=""
-                    aria-describedby="emailHelpId"
-                    placeholder="email@domain.com"
-                />
-                <div class="col-3"> &emsp;</div>
-                </div>
-
-                <div class="d-grid d-flex justify-content-center">
-                    <button
-                        type="button"
-                        name=""
-                        id=""
-                        class="btn btn-dark justify-content-center col-4" 
-                    >
-                        Sign up with email
-                    </button>
-                </div>
-                <div><br></div>
+                <form action="./picks.html" method="post">
+                    <label for="email" class="form-label d-flex justify-content-center text-secondary">Enter your email to start adopting!</label>
+                    
+                    <div class="d-grid gap-2 justify-content-center">
+                        <input
+                            type="email"
+                            class="form-control justify-content-center"
+                            name="email" 
+                            id="email" 
+                            aria-describedby="emailHelpId"
+                            placeholder="email@domain.com"
+                            required
+                        />
+                    </div>
+                    
+                    <div class="d-grid d-flex justify-content-center">
+                        <button 
+                            type="submit" 
+                            class="btn btn-dark justify-content-center col-4"
+                        >
+                            Sign up with email
+                        </button>
+                    </div>
+                </form>
 
             </div>
             
