@@ -71,6 +71,7 @@ a {
 /* Navbar Styling */
 .navbar {
     padding: 1.15rem 1.5rem;
+    border-bottom: #d7d7d7 1px solid;
 }
 
 
@@ -145,3 +146,55 @@ a.sidebar-link:hover {
 .card {
     border-radius: 20%
 }
+
+.stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: auto;
+    content: "";
+    background-color: rgba(0,0,0,0);
+}
+
+.media-body {
+    margin-left: 30px;
+}
+
+.favorite-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .favorite-container img {
+    width: 1200px;
+    height: auto;
+    border-radius: 15px;
+  }
+  
+  .favorite-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .favorite-btn i {
+    font-size: 24px;
+    color: white;
+  }
+  
+  .favorite-btn.active i {
+    color: red;
+  }
+  
