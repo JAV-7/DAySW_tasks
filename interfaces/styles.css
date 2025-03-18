@@ -1,0 +1,148 @@
+/* General Body Styling */
+body {
+    color: #000;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff;
+}
+
+/* List and Link Resets */
+li {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+}
+
+/* Main Section Styling */
+.main {
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+/* Sidebar Styling */
+#sidebar {
+    max-width: 264px;
+    min-width: 264px;
+    transition: all 0.35s ease-in-out;
+    background-color: #fff; 
+    display: flex;
+    flex-direction: column;
+    color: #000;
+}
+
+#sidebar.collapsed {
+    margin-left: -264px;
+}
+
+/* Style for sidebar items to align icons and text */
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+  }
+  
+  .sidebar-item i {
+    margin-right: 10px;
+  }
+  
+  .sidebar-item span {
+    flex: 1;
+  }
+  
+  /* Make sure links take full width of their container */
+  .sidebar-link {
+    display: block;
+    width: 100%;
+  }
+
+/* Sidebar Toggle Button */
+.toggler-btn {
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+}
+.toggler-btn i {
+    font-size: 1.75rem;
+    color: #000;
+}
+
+/* Navbar Styling */
+.navbar {
+    padding: 1.15rem 1.5rem;
+}
+
+
+/* Sidebar Logo */
+.sidebar-logo {
+    padding: 1.15rem;
+    text-align: justify;
+}
+.sidebar-logo a {
+    color: #000;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+/* Sidebar Section Headers */
+.sidebar-header {
+    color: #000;
+}
+
+/* Sidebar Links */
+a.sidebar-link {
+    text-decoration: none;
+    font-family: var(--bs-body-font-family); 
+    padding: 0.625rem 1.625rem;
+    color: #000;
+    position: relative;
+    display: block;
+    font-size: 1.25rem;
+    transition: all 0.35s;
+}
+
+/* Sidebar Hover Effect */
+a.sidebar-link:hover {
+    background-color: #e6e6e6;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+/* Sidebar Dropdown Arrow */
+.sidebar-link[data-bs-toggle="collapse"]::after {
+    border: solid;
+    border-width: 0 0.075rem 0.075rem 0;
+    content: "";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.4rem;
+    transform: rotate(-135deg);
+    transition: all 0.2s ease-out;
+    border-color: #000;
+}
+
+.sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+    transform: rotate(45deg);
+}
+
+/* Sidebar Dropdown Links */
+.sidebar-dropdown {
+    background-color: #f9f9f9;
+    border-radius: 0 0 8px 8px;
+}
+.sidebar-dropdown a {
+    color: #555;
+    font-size: 1rem;
+}
+.sidebar-dropdown a:hover {
+    color: #000;
+}
+
+.card {
+    border-radius: 20%
+}
+
