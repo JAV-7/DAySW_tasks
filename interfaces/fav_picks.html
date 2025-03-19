@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>Pet</title>
+        <title>Favorites</title>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <!-- local_stylesheet -->
@@ -94,56 +94,56 @@
              </ul>
              <!-- Sidebar Navigation Ends-->
             </aside>
-
         <!-- Sidebar Ends-->
-        <!-- Main Section -->
-        <main class="main">
-            <!-- Top Navbar -->
-            <nav class="navbar navbar-expand">
-                <!-- Toggler Button -->
-                <button class="toggler-btn" type="button">
-                    <i class="lni lni-text-paragraph"></i>
-                </button>
-
-                <!-- Search Bar -->
-                <form class="d-flex flex-grow-1" style="width: 200px;">
-                    <div class="input-group">
-                        <input class="form-control" type="search" placeholder="Search pets..." aria-label="Search">
-                        <button class="btn btn-outline-dark" type="submit">Adopt!</button>
+        <!-- Main Section-->
+            <div class="main">
+                 <!-- Toggler-->
+                <nav class="navbar navbar-expand no-border">
+                    <button class="toggler-btn" type="button">
+                        <i class="lni lni-text-paragraph"></i>
+                    </button>
+                </nav>
+        <!-- True Main Section-->
+                <main class="p-3">
+                    <div class="container-fluid">
+                        <div class="mb-3 text-justify">
+                            <h1> Favorites</h1>
+                            <p class="h6 text-muted">All your furry faves in one place!🐾</p>
+                            <br>
+                        </div>
                     </div>
-                </form>
-            </nav>
 
-            <!-- True Section -->
-            <section class="p-3 d-flex justify-content-center align-items-center w-100">
-                <div class="media d-flex align-items-center">
+                    <!-- Pet Carousel-->
+                    <!-- JS classes to be implemented-->
+                    <div class="container-fluid">
+                        <div class="row gy-3">
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                <div class="card position-relative">
+                                    <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQJ9L-r3RFCGWnEpFIzhX5cJIZROyAdB91pTtGDbWGHFlUAYs-0FzP4YEj5Bm1WQqh7Xcx3s9SWAoD7U50XHjvGAA" class="card-img-top" alt="...">
+                                    
+                                    <!-- Overlay Text on Image -->
+                                    <div class="position-absolute top-0 start-0 p-2 text-white">
+                                        <h4 class="card-title mb-0">Mateo</h4>
+                                    </div>
 
-                    <!-- Pet Image -->
-                    <div class="favorite-container">
-                        <img class="align-self-center mr-4 rounded" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQJ9L-r3RFCGWnEpFIzhX5cJIZROyAdB91pTtGDbWGHFlUAYs-0FzP4YEj5Bm1WQqh7Xcx3s9SWAoD7U50XHjvGAA" style="max-width: 700px; max-height: auto; margin-top: 10px;" alt="pet-id">
-                        <button class="favorite-btn" data-favorited="false" onclick="toggleFavorite(this)">
-                            <i class="bi bi-heart"></i>
-                        </button>
+                                    <!-- Overlay Fav Button -->
+                                    <button class="favorite-btn btn btn-sm position-absolute top-0 end-0" data-favorited="false" onclick="toggleFavorite(this)">
+                                        <i class="bi bi-heart"></i>
+                                      </button>
+
+                                    <!-- Card Body -->
+                                    <div class="card-body">
+                                        <h5 class="card-title">3 yr, Bobtail</h5>
+                                        <p class="card-text text-muted">Bugambilias</p>
+                                        <a href="selected_pick.html" class="stretched-link"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                      
-                    <!-- Pet Description -->
-                    <div class="media-body me-5">
-                        <h4 class="mt-0 ">Laika</h4>
-                        <h1 class="mt-0 fw-bold">1 year old, Husky</h1>
-                        <br>
-                        <p class="text-muted">Laika is a 1-year-old Husky looking for a new home. I’m moving and unfortunately can’t keep her. She’s playful, energetic, and loves attention. She needs at least two walks a day and space to run around.
-                        She’s friendly with kids and gets along with other dogs if introduced properly. She’s vaccinated and dewormed. I just want her to go to a good home where she’ll be loved and taken care of. If you’re interested, send me a message.</p>
-                        <br>
-                        <i class="lni lni-location-arrow-right"></i>
-                        <span>
-                            <p>Ciudad Granja</p>
-                        </span>
-                        &nbsp;
-                        <button type="button" class="btn btn-dark btn-lg btn-block w-100">Adopt!</button>
-                    </div>
-                </div>
-            </section>
-        </main>
+                <!-- Main Section Ends-->
+                </main>
+            </div>
         </div>
 
         <!-- Bootstrap JavaScript Libraries -->
