@@ -149,10 +149,23 @@ a.sidebar-link:hover {
 }
 
 .card {
+    
     position: relative;
     border-radius: 20px;
     overflow: hidden;
-}
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-img-top {
+    height: 250px;
+    object-fit: cover; /* Ensures images fill without distortion */
+  }
+  
+  .card-body {
+    flex-grow: 1; /* Allows content to fill remaining space */
+  }
   
   .card .favorite-btn {
     position: absolute;
