@@ -71,6 +71,12 @@ a {
 /* Navbar Styling */
 .navbar {
     padding: 1.15rem 1.5rem;
+    border-bottom: #d7d7d7 1px solid;
+}
+
+.navbar.no-border {
+    padding: 1.15rem 1.5rem;
+    border-bottom: none; 
 }
 
 
@@ -143,5 +149,95 @@ a.sidebar-link:hover {
 }
 
 .card {
-    border-radius: 20%
+    
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-img-top {
+    height: 250px;
+    object-fit: cover; /* Ensures images fill without distortion */
+  }
+  
+  .card-body {
+    flex-grow: 1; /* Allows content to fill remaining space */
+  }
+  
+  .card .favorite-btn {
+    position: absolute;
+    top: 5px !important;
+    right: 5px !important;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  .card .favorite-btn i {
+    font-size: 18px;
+    color: white;
+  }
+  
+  .card .stretched-link::after {
+    z-index: 1;
+  }
+
+.stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: auto;
+    content: "";
+    background-color: rgba(0,0,0,0);
 }
+
+.media-body {
+    margin-left: 30px;
+}
+
+.favorite-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .favorite-container img {
+    width: 1200px;
+    height: auto;
+    border-radius: 15px;
+  }
+  
+  .favorite-container .favorite-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .favorite-container .favorite-btn i {
+    font-size: 24px;
+    color: white;
+  }
+  
+
+  
