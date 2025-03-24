@@ -1,0 +1,44 @@
+body{
+    font-family: "Silkscreen", sans-serif;;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px lightslategrey;
+    transition:  0.3s;
+}
+.card {
+    transition:  0.3s ;
+}
+.card-img-top {
+    height: 180px;
+    object-fit: contain;
+    background-color: rgb(255, 215, 215);
+    padding: 10px;
+}
+.pagination .page-link {
+    color: maroon;
+}
+.pagination .active .page-link {
+    background-color: maroon;
+    border-color: maroon;
+    color: antiquewhite;
+}
+
+#pagination {
+    margin-top: 2em;
+}
+
+#pagination .pagination {
+    margin-bottom: 0.5em;
+}
+
+.page-item.active .page-link {
+    color: white;
+    background-color: maroon;
+    border-color: maroon;
+}
+
+.page-link:hover {
+    color: maroon;
+}
