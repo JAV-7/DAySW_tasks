@@ -1,130 +1,97 @@
-//Francisco Javier Ramos Jiménez
+// Francisco Javier Ramos Jiménez
 
-/**
- * Custom exception class for product-related errors.
- */
-export class ProductException extends Error { 
-    constructor(message) {
-        super(message);
-        this.name = "ProductException";
-    }
+// Custom error class for Product-related exceptions
+class ProductException extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ProductException";  // Set the error name to "ProductException"
+  }
 }
 
-/**
- * Class representing a product.
- */
-export class Product {
-    constructor(name, price, stock, imageURL) {
-        /** @type {string} Unique product ID */
-        this._id = crypto.randomUUID();
-        
-        /** @type {string} Product name */
-        this._name = "";
-        
-        /** @type {number} Product price */
-        this._price = 0;
-        
-        /** @type {number} Product stock quantity */
-        this._stock = 0;
-        
-        /** @type {string} Product image URL */
-        this._imageURL = "";
-        
-        // Set properties using their respective setters
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
-        this.image = imageURL;
-    }
+// Product class definition
+export default class Product {
+  // Constructor to initialize a new product
+  constructor(title, price, category, imageURL, _id = null) {
+    this.title = title;  // Calls setter for title validation
+    this.price = price;  // Calls setter for price validation
+    this.category = category;  // Calls setter for category validation
+    this.imageURL = imageURL;  // Calls setter for imageURL validation
+    this._id = _id;  // Set the product ID (optional)
+  }
 
-    /**
-     * Sets the product name.
-     * @param {string} name - The name of the product.
-     * @throws {ProductException} If the name is invalid.
-     */
-    set name(name) {
-        if (typeof name !== "string" || name.trim() === "") throw new ProductException("Invalid name!");
-        this._name = name;
-    }
+  // Getters for product properties
+  get title() {
+    return this._title;
+  }
 
-    /**
-     * Sets the product price.
-     * @param {number} price - The price of the product.
-     * @throws {ProductException} If the price is invalid.
-     */
-    set price(price) {
-        if (typeof price !== "number" || price <= 0) throw new ProductException("Invalid price!");
-        this._price = price;
-    }
+  get price() {
+    return this._price;
+  }
 
-    /**
-     * Sets the product stock quantity.
-     * @param {number} stock - The stock quantity.
-     * @throws {ProductException} If the stock is invalid.
-     */
-    set stock(stock) {
-        if (typeof stock !== "number" || stock <= 0) throw new ProductException("Invalid stock!");
-        this._stock = stock;
-    }
+  get category() {
+    return this._category;
+  }
 
-    /**
-     * Sets the product image URL.
-     * @param {string} imageURL - The image URL.
-     * @throws {ProductException} If the URL is invalid.
-     */
-    set image(imageURL) {
-        if (typeof imageURL !== "string" || imageURL === "") throw new ProductException("Invalid URL");
-        this._imageURL = imageURL;
-    }
+  get imageURL() {
+    return this._imageURL;
+  }
 
-    get name() { return this._name; }
-    get id() { return this._id; }
-    get price() { return this._price; }
-    get stock() { return this._stock; }
-    get image() { return this._imageURL; }
+  get id() {
+    return this._id;
+  }
 
-    /**
-     * Creates a Product instance from an object.
-     * @param {Object} obj - The object containing product data.
-     * @returns {Product} The created Product instance.
-     * @throws {ProductException} If the object is invalid.
-     */
-    static createFromObject(obj) {
-        if (!obj || typeof obj !== "object") throw new ProductException("Invalid Object");
-        return new Product(obj.name, obj.price, obj.stock, obj.imageURL);
+  // Setters for product properties with validation
+  set title(value) {
+    if (!value || typeof value !== "string" || value.trim() === "") {
+      throw new ProductException("Invalid title parameter.");
     }
+    this._title = value;
+  }
 
-    /**
-     * Creates a Product instance from a JSON string.
-     * @param {string} jsonValue - The JSON string.
-     * @returns {Product} The created Product instance.
-     * @throws {ProductException} If the JSON is invalid.
-     */
-    static createFromJson(jsonValue) {
-        if (!jsonValue || typeof jsonValue !== "string") throw new ProductException("Invalid JSON");
-        try {
-            let obj = JSON.parse(jsonValue);
-            return Product.createFromObject(obj); 
-        } catch (error) {
-            throw new ProductException("Invalid JSON");
-        }
+  set price(value) {
+    if (typeof value !== "number" || Number.isNaN(value) || value < 0) {
+      throw new ProductException("Invalid price parameter.");
     }
+    this._price = value;
+  }
 
-    /**
-     * Generates an HTML representation of the product.
-     * @param {Object} obj - The product object.
-     * @returns {string} HTML string representing the product.
-     */
-    static toHTML(obj) {
-        return `
-            <div class="card" style="width: 18rem;">
-            <img src="${obj.imageURL}" class="card-img-top" alt="${obj.name}">
-            <div class="card-body">
-                <h5 class="card-title">${obj.name}</h5>
-                <p class="card-text">Stock: ${obj.stock}</p>
-                <p class="card-text">Price: ${obj.price}</p>
-            </div>
-            </div>
-        `;
+  set category(value) {
+    if (!value || typeof value !== "string" || value.trim() === "") {
+      throw new ProductException("Invalid category parameter.");
     }
+    this._category = value;
+  }
+
+  set imageURL(value) {
+    if (!value || typeof value !== "string" || value.trim() === "") {
+      throw new ProductException("Invalid image URL.");
+    }
+    this._imageURL = value;
+  }
+
+  // Setter for _id with no validation (direct assignment)
+  set id(value) {
+    this._id = value;
+  }
+
+  // Static method to create a Product instance from JSON string
+  static createFromJson(jsonValue) {
+    try {
+      const parsedObj = JSON.parse(jsonValue);
+      return Product.createFromObject(parsedObj);  // Create Product from the parsed object
+    } catch (error) {
+      throw new ProductException("Invalid JSON!");
+    }
+  }
+
+  // Static method to create a Product instance from a plain object
+  static createFromObject(obj) {
+    return new Product(
+      obj.title,
+      obj.price,
+      obj.category,
+      obj.imageURL,
+      obj._id
+    );
+  }
 }
