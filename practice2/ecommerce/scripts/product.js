@@ -10,35 +10,25 @@ class ProductException extends Error {
 
 // Product class definition
 export default class Product {
-  // Constructor to initialize a new product
+  // Constructor 
   constructor(title, price, category, imageURL, _id = null) {
-    this.title = title;  // Calls setter for title validation
-    this.price = price;  // Calls setter for price validation
-    this.category = category;  // Calls setter for category validation
-    this.imageURL = imageURL;  // Calls setter for imageURL validation
+    this.title = title;  // Calls setter for validation
+    this.price = price;  
+    this.category = category;  
+    this.imageURL = imageURL;  
     this._id = _id;  // Set the product ID (optional)
   }
 
   // Getters for product properties
-  get title() {
-    return this._title;
-  }
+  get title() {return this._title; }
 
-  get price() {
-    return this._price;
-  }
+  get price() { return this._price; }
 
-  get category() {
-    return this._category;
-  }
+  get category() { return this._category; }
 
-  get imageURL() {
-    return this._imageURL;
-  }
+  get imageURL() { return this._imageURL; }
 
-  get id() {
-    return this._id;
-  }
+  get id() { return this._id; }
 
   // Setters for product properties with validation
   set title(value) {
@@ -69,7 +59,7 @@ export default class Product {
     this._imageURL = value;
   }
 
-  // Setter for _id with no validation (direct assignment)
+  // Setter for _id with no validation
   set id(value) {
     this._id = value;
   }
@@ -77,8 +67,8 @@ export default class Product {
   // Static method to create a Product instance from JSON string
   static createFromJson(jsonValue) {
     try {
-      const parsedObj = JSON.parse(jsonValue);
-      return Product.createFromObject(parsedObj);  // Create Product from the parsed object
+      const obj = JSON.parse(jsonValue);
+      return Product.createFromObject(obj);  // Create Product from the parsed object
     } catch (error) {
       throw new ProductException("Invalid JSON!");
     }

@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const jwt = require('jsonwebtoken');
 
 exports.createUser = async (req, res) => {
     try {
@@ -41,4 +42,19 @@ exports.deleteUser = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 };
-    
+
+exports.loginUser = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ error: 'Invalid credentials' });
+
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
+
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        res.json({ token });
+    } catch (err) {
+        res.status(500).json({ error: 'Server Error' });
+    }
+};

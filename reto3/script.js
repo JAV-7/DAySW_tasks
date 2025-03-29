@@ -1,3 +1,4 @@
+//Check this one for later reference
 class API{
     constructor(baseURL){
         this.baseURL = baseURL;

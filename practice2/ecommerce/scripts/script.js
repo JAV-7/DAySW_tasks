@@ -10,11 +10,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     // Fetch the products from the data handler
     const products = await data_handler.getProducts();
-    // Map through the products and generate HTML cards
     container.innerHTML = products.map(product => createCard(product)).join("");
   
   } catch (error) {
-    // Log any errors and display a message if the products cannot be loaded
     console.error("An error occurred while loading products:", error);
     container.innerHTML = `<p class="text-danger">Unable to append products.</p>`;
   }
@@ -23,15 +21,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Event listener for clicks on the document to handle adding products to the cart
 document.addEventListener("click", async (e) => {
   if (e.target.classList.contains("add-cart")) { // Check if the clicked element is an "add to cart" button
-    e.preventDefault(); // Prevent the default behavior (i.e., page navigation)
+    e.preventDefault(); 
     const productId = e.target.getAttribute("data-id"); // Get the product ID from the button's data-id attribute
   
     try {
-      // Add the product to the shopping cart with quantity of 1
-      shopping_cart_handler.addItem(productId, 1);
+      shopping_cart_handler.addItem(productId, 1); // Add a single product with amount 1
       console.log("New product in the cart:", shopping_cart_handler.cart);
     } catch (error) {
-      // Log any errors encountered while adding the product to the cart
       console.error("An error occurred while adding to the cart:", error);
     }
   }

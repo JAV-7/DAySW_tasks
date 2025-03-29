@@ -13,76 +13,67 @@ const data_handler = {
     
     // Check if the response was successful
     if (!res.ok) {
-      throw new Error(`Error fetching products: ${res.status} ${res.statusText}`); // Throw an error if the response was not ok
+      throw new Error(`Error fetching products: ${res.status} ${res.statusText}`);
     }
 
     const data = await res.json(); // Parse the JSON data from the response
     
-    // Ensure the response is an array of products
+    // Check if it is or not an array of products
     if (!Array.isArray(data)) {
       throw new Error("Invalid response: Expected an array of products");
     }
 
-    // Map the data to Product objects using the createFromObject method
+    // Map the data to Product objects using the createFromObject
     return data.map(obj => Product.createFromObject(obj));
   },
 
   // Fetch a single product by its ID
   async getProductById(id) {
-    const res = await fetch(`${API_URL}/${id}`); // Make GET request to fetch the product by ID
+    const res = await fetch(`${API_URL}/${id}`);
     
-    // Check if the response was successful
     if (!res.ok) {
-      throw new Error(`Error fetching product with ID ${id}: ${res.status} ${res.statusText}`); // Throw an error if the response was not ok
+      throw new Error(`Error fetching product with ID ${id}: ${res.status} ${res.statusText}`); 
     }
 
-    const data = await res.json(); // Parse the JSON data from the response
+    const data = await res.json(); 
     
-    // Return the product as a Product object created from the response data
     return Product.createFromObject(data);
   },
 
   // Create a new product by sending a POST request
   async createProduct(product) {
     const res = await fetch(API_URL, {
-      method: "POST", // Use POST method to create a new product
+      method: "POST", 
       headers: {
         "Content-Type": "application/json", // Set content type as JSON
       },
       body: JSON.stringify(product), // Convert the product object to JSON format
     });
 
-    // Check if the response was successful
     if (!res.ok) throw new Error("Unable to create product");
-
-    // Return the created product's data in JSON format
     return await res.json();
   },
 
   // Update an existing product by its ID
   async updateProduct(id, updatedP) {
     const res = await fetch(`${API_URL}/${id}`, {
-      method: "PUT", // Use PUT method to update the product
+      method: "PUT", 
       headers: {
-        "Content-Type": "application/json", // Set content type as JSON
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedP), // Convert the updated product object to JSON format
+      body: JSON.stringify(updatedP), 
     });
-
-    // Check if the response was successful
     if (!res.ok) throw new Error(`Unable to update product with ID ${id}`);
   },
 
   // Delete a product by its ID
   async deleteProduct(id) {
     const res = await fetch(`${API_URL}/${id}`, {
-      method: "DELETE", // Use DELETE method to remove the product
+      method: "DELETE", 
     });
-
-    // Check if the response was successful
     if (!res.ok) throw new Error(`Unable to delete product with ID ${id}`);
   }
 };
 
-// Exporting the data handler object for use in other modules
+// Exporting the data handler object for other codes
 export default data_handler;
