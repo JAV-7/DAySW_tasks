@@ -1,0 +1,96 @@
+openapi: 3.0.0
+info:
+  title: API de Usuarios, Productos y Órdenes
+  version: 1.0.0
+servers:
+  - url: http: //localhost:3000/api
+paths:
+  /users:
+    get:
+      summary: Obtiene todos los usuarios
+      security:
+        - BearerAuth: []
+      responses: 200:
+          description: Lista de usuarios obtenida correctamente
+    post:
+      summary: Crea un usuario
+      responses: 201:
+          description: Usuario creado exitosamente
+  /users/{id}:
+    get:
+      summary: Obtiene un usuario por ID
+      security:
+        - BearerAuth: []
+      responses: 200:
+          description: Usuario obtenido exitosamente
+    put:
+      summary: Actualiza un usuario por ID
+      security:
+        - BearerAuth: []
+      responses: 200:
+          description: Usuario actualizado correctamente
+    delete:
+      summary: Elimina un usuario por ID
+      security:
+        - BearerAuth: []
+      responses: 200:
+          description: Usuario eliminado correctamente
+  /users/login:
+    post:
+      summary: Inicia sesión un usuario
+      responses: 200:
+          description: Autenticación exitosa
+  /products:
+    get:
+      summary: Obtiene todos los productos
+      security:
+        - BearerAuth: []
+      responses: 200:
+          description: Lista de productos obtenida correctamente
+    post:
+      summary: Crea un producto
+      security:
+        - BearerAuth: []
+      responses: 201:
+          description: Producto creado exitosamente
+  /products/{id
+}:
+    get:
+      summary: Obtiene un producto por ID
+      security:
+        - BearerAuth: []
+      responses: 200:
+          description: Producto obtenido exitosamente
+    put:
+      summary: Actualiza un producto por ID
+      security:
+        - BearerAuth: []
+      responses: 200:
+          description: Producto actualizado correctamente
+    delete:
+      summary: Elimina un producto por ID
+      security:
+        - BearerAuth: []
+      responses: 200:
+          description: Producto eliminado correctamente
+  /orders:
+    get:
+      summary: Obtiene todas las órdenes
+      responses: 200:
+          description: Lista de órdenes obtenida correctamente
+    post:
+      summary: Crea una orden
+      responses: 201:
+          description: Orden creada exitosamente
+  /orders/{id
+}:
+    get:
+      summary: Obtiene una orden por ID
+      responses: 200:
+          description: Orden obtenida exitosamente
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

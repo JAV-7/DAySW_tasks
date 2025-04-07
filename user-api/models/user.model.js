@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
-const bcrypt = require('JST_SECRET');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    age: { type: Number, min: 18 },
-    password : { type: String, required: true}
+    password: { type: String, required: true }
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {
@@ -18,5 +17,12 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.comparePassword = function (password) {
     return bcrypt.compare(password, this.password);
 };
+
+userSchema.set('toJSON', {
+    transform: function (doc, ret) {
+        delete ret.password;
+        return ret;
+    }
+});
 
 module.exports = mongoose.model('User', userSchema);
