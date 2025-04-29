@@ -1,0 +1,17 @@
+Login funcional con JWT - 15 / 15
+Middleware de autenticación - 10 / 10
+Middleware de autorización (roles) - 10 / 10
+CRUD productos (según rol) - 20 / 20
+CRUD usuarios (según rol y propiedad) - 15 / 15
+Crear orden (solo autenticado) - 10 / 10
+Documentación Swagger - 10 / 10
+Pruebas funcionales con capturas - 15 / 15
+Conclusión objetiva - 5 / 5
+
+Conclusión: Aprendí mucho de esta practica, ya que en un principio 
+me costó un poco entender cómo se ejecutaban las acciones 
+y cómo se cargaban en la base de datos. 
+Pero, al codificarlo entendí en su mayoría los procesos y la necesidad de mongoose y mongodb para que funcione adecuadamente.
+También me ayudó mucho a entender el realizar el middleware role.js y realizar las pruebas tanto en postman como en rest client.
+ 
+ URL video: https://youtu.be/XX46f9sL_3c

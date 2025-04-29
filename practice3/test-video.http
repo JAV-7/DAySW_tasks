@@ -1,0 +1,73 @@
+### Crear nuevo usuario (admin)
+POST http://localhost:5500/api/users
+Content-Type: application/json
+
+{
+  "name": "Admin Video 4",
+  "email": "adminvideo4@example.com",
+  "password": "123456",
+  "role": "admin"
+}
+
+###
+
+### Login (obtener token usuario)
+POST http://localhost:5500/api/users/login
+Content-Type: application/json
+
+{
+  "email": "adminvideo4@example.com",
+  "password": "123456"
+}
+
+###Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTAxM2YwYTFjNTNlMmU0OWNlODlmMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTg4NTI0NCwiZXhwIjoxNzQ4NDc3MjQ0fQ.YOs4nbacjuGPGohARmXvR9-TKxHR1pCmGlvblnf0zmY
+### Obtener todos los usuarios (requiere token de admin)
+GET http://localhost:5500/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTAxM2YwYTFjNTNlMmU0OWNlODlmMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTg4NTI0NCwiZXhwIjoxNzQ4NDc3MjQ0fQ.YOs4nbacjuGPGohARmXvR9-TKxHR1pCmGlvblnf0zmY
+
+###
+
+### Actualizar usuario (Juan) por ID (admin, requiere token admin)
+PUT http://localhost:5500/api/users/680ee2d32eab297843285c69
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTAxM2YwYTFjNTNlMmU0OWNlODlmMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTg4NTI0NCwiZXhwIjoxNzQ4NDc3MjQ0fQ.YOs4nbacjuGPGohARmXvR9-TKxHR1pCmGlvblnf0zmY
+Content-Type: application/json
+
+{
+  "name": "Juan Perez"
+}
+
+###
+
+POST http://localhost:5500/api/users
+Content-Type: application/json
+
+{
+  "name": "Ejemplo",
+  "email": "example@example.com",
+  "password": "123456"
+}
+
+### Eliminar usuario por ID (solo admin)
+DELETE http://localhost:5500/api/users/681019716c03293a89ef1a0c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTAxM2YwYTFjNTNlMmU0OWNlODlmMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTg4NTI0NCwiZXhwIjoxNzQ4NDc3MjQ0fQ.YOs4nbacjuGPGohARmXvR9-TKxHR1pCmGlvblnf0zmY
+
+### Listar productos
+GET http://localhost:5500/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTAxM2YwYTFjNTNlMmU0OWNlODlmMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTg4NTI0NCwiZXhwIjoxNzQ4NDc3MjQ0fQ.YOs4nbacjuGPGohARmXvR9-TKxHR1pCmGlvblnf0zmY
+###
+
+###
+
+### Crear nuevo producto (solo admin)
+POST http://localhost:5500/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTAxOTM2NmMwMzI5M2E4OWVmMWEwNiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTg4NTUwOSwiZXhwIjoxNzQ4NDc3NTA5fQ.pZ7wjjER1iYB2CXn8o2hxlt2NHfCto3xXk2Osx90ILs
+Content-Type: application/json
+
+{
+  "name": "Testing",
+  "price": 99.99,
+  "description": "testing product",
+  "stock": 10,
+  "category": "test"
+}
+###

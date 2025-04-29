@@ -1,0 +1,217 @@
+openapi: 3.0.0
+info:
+  title: API Users, Products, and Orders
+  version: 1.0.0
+servers:
+  - url: http://localhost:5500/api
+
+paths:
+  /users:
+    get:
+      summary: Obtiene todos los usuarios
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Lista de usuarios obtenida correctamente
+    post:
+      summary: Crea un usuario
+      security: []  # No requiere autenticación para registrar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: Usuario creado exitosamente
+
+  /users/login:
+    post:
+      summary: Inicia sesión un usuario
+      security: []  # No requiere autenticación para login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Autenticación exitosa (retorna JWT)
+
+  /users/{id}:
+    get:
+      summary: Obtiene un usuario por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Usuario obtenido exitosamente
+    put:
+      summary: Actualiza un usuario por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Usuario actualizado correctamente
+    delete:
+      summary: Elimina un usuario por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Usuario eliminado correctamente
+
+  /products:
+    get:
+      summary: Obtiene todos los productos
+      responses:
+        200:
+          description: Lista de productos obtenida correctamente
+    post:
+      summary: Crea un producto
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                stock:
+                  type: number
+      responses:
+        201:
+          description: Producto creado exitosamente
+
+  /products/{id}:
+    get:
+      summary: Obtiene un producto por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Producto obtenido exitosamente
+    put:
+      summary: Actualiza un producto por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Producto actualizado correctamente
+    delete:
+      summary: Elimina un producto por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Producto eliminado correctamente
+
+  /orders:
+    get:
+      summary: Obtiene todas las órdenes del usuario autenticado
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Lista de órdenes obtenida correctamente
+    post:
+      summary: Crea una orden
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                shippingAddress:
+                  type: object
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      product:
+                        type: string
+                      quantity:
+                        type: integer
+      responses:
+        201:
+          description: Orden creada exitosamente
+
+  /orders/{id}:
+    get:
+      summary: Obtiene una orden por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Orden obtenida exitosamente
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

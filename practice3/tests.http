@@ -1,0 +1,190 @@
+### Crear nuevo usuario (cliente 1)
+POST http://localhost:5500/api/users
+Content-Type: application/json
+
+{
+  "name": "Juan Perez",
+  "email": "juan@example.com",
+  "password": "123456"
+}
+
+### Crear nuevo usuario (cliente 2)
+POST http://localhost:5500/api/users
+Content-Type: application/json
+
+{
+  "name": "Juana Pereza",
+  "email": "juana@example.com",
+  "password": "123456"
+}
+
+
+### Crear nuevo usuario (admin)
+POST http://localhost:5500/api/users
+Content-Type: application/json
+
+{
+  "name": "Admin Uno",
+  "email": "admin1@example.com",
+  "password": "123456",
+  "role": "admin"
+}
+
+###
+
+### Login (obtener token usuario)
+POST http://localhost:5500/api/users/login
+Content-Type: application/json
+
+{
+  "email": "juan@example.com",
+  "password": "123456"
+}
+
+### Login (obtener token usuario)
+POST http://localhost:5500/api/users/login
+Content-Type: application/json
+
+{
+  "email": "juana@example.com",
+  "password": "123456"
+}
+
+### Login (obtener token admin)
+POST http://localhost:5500/api/users/login
+Content-Type: application/json
+
+{
+  "email": "admin1@example.com",
+  "password": "123456"
+}
+
+###
+
+### Obtener todos los usuarios (requiere token de admin)
+GET http://localhost:5500/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGUxYTQ0ZDhkNGY3N2ZjMzI4MTU4MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTgxMTA5NCwiZXhwIjoxNzQ4NDAzMDk0fQ.jC9hnp38pLIq2YFAbChbu0lMvpgGedAre_pflw6MtpE
+
+###
+
+### Obtener usuario por ID (admin, requiere token)
+GET http://localhost:5500/api/users/680ee2d32eab297843285c69
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGUxYTQ0ZDhkNGY3N2ZjMzI4MTU4MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTgxMTA5NCwiZXhwIjoxNzQ4NDAzMDk0fQ.jC9hnp38pLIq2YFAbChbu0lMvpgGedAre_pflw6MtpE
+
+### Obtener usuario por ID (dueño, Juan)
+GET http://localhost:5500/api/users/680ee2d32eab297843285c69
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGVlMmQzMmVhYjI5Nzg0MzI4NWM2OSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU4MTEwMzMsImV4cCI6MTc0ODQwMzAzM30.vhKB7PeXM7T1UwJfnwAMneDnf8dGXHWerDIwFVkV9tg
+
+
+###
+
+### Actualizar usuario (Juan) por ID (admin, requiere token admin)
+PUT http://localhost:5500/api/users/680ee2d32eab297843285c69
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGVlMmQzMmVhYjI5Nzg0MzI4NWM2OSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU4MTEwMzMsImV4cCI6MTc0ODQwMzAzM30.vhKB7PeXM7T1UwJfnwAMneDnf8dGXHWerDIwFVkV9tg
+Content-Type: application/json
+
+{
+  "name": "Juan Pera"
+}
+
+###
+
+### Actualizar usuario (Juan) por ID (dueño).
+PUT http://localhost:5500/api/users/680ee2d32eab297843285c69
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGVlMmQzMmVhYjI5Nzg0MzI4NWM2OSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU4MTEwMzMsImV4cCI6MTc0ODQwMzAzM30.vhKB7PeXM7T1UwJfnwAMneDnf8dGXHWerDIwFVkV9tg
+Content-Type: application/json
+
+{
+  "name": "Juana Perez"
+}
+
+###
+
+### Eliminar usuario (Juana) por ID (solo admin)
+DELETE http://localhost:5500/api/users/680ef62a99fd911ebdc3a34e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGUxYTQ0ZDhkNGY3N2ZjMzI4MTU4MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTgxMTA5NCwiZXhwIjoxNzQ4NDAzMDk0fQ.jC9hnp38pLIq2YFAbChbu0lMvpgGedAre_pflw6MtpE
+
+###
+
+### Listar productos
+GET http://localhost:5500/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGUxYTQ0ZDhkNGY3N2ZjMzI4MTU4MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTgxMTA5NCwiZXhwIjoxNzQ4NDAzMDk0fQ.jC9hnp38pLIq2YFAbChbu0lMvpgGedAre_pflw6MtpE
+###
+
+### Crear nuevo producto (solo admin)
+POST http://localhost:5500/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGUxYTQ0ZDhkNGY3N2ZjMzI4MTU4MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTgxMTA5NCwiZXhwIjoxNzQ4NDAzMDk0fQ.jC9hnp38pLIq2YFAbChbu0lMvpgGedAre_pflw6MtpE
+Content-Type: application/json
+
+{
+  "name": "Producto Prueba",
+  "price": 99.99,
+  "description": "Este es un producto de prueba",
+  "stock": 10,
+  "category": "test"
+}
+
+###
+
+### Obtener producto por ID
+GET http://localhost:5500/api/products/67ef19312caa9b77534da7b0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGUxYTQ0ZDhkNGY3N2ZjMzI4MTU4MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTgxMTA5NCwiZXhwIjoxNzQ4NDAzMDk0fQ.jC9hnp38pLIq2YFAbChbu0lMvpgGedAre_pflw6MtpE
+
+###
+
+### Actualizar producto por ID (solo admin)
+PUT http://localhost:5500/api/products/67ef19312caa9b77534da7b0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGUxYTQ0ZDhkNGY3N2ZjMzI4MTU4MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTgxMTA5NCwiZXhwIjoxNzQ4NDAzMDk0fQ.jC9hnp38pLIq2YFAbChbu0lMvpgGedAre_pflw6MtpE
+Content-Type: application/json
+
+{
+  "name": "Update Item"
+}
+
+###
+PUT http://localhost:5500/api/products/67ef19312caa9b77534da7b0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGUxYTQ0ZDhkNGY3N2ZjMzI4MTU4MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTgxMTA5NCwiZXhwIjoxNzQ4NDAzMDk0fQ.jC9hnp38pLIq2YFAbChbu0lMvpgGedAre_pflw6MtpE
+Content-Type: application/json
+
+{
+  "name": "Sample Item"
+}
+###
+
+### Eliminar producto por ID (solo admin) (producto prueba)
+DELETE http://localhost:5500/api/products/680ee35b2eab297843285c6e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGUxYTQ0ZDhkNGY3N2ZjMzI4MTU4MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTgxMTA5NCwiZXhwIjoxNzQ4NDAzMDk0fQ.jC9hnp38pLIq2YFAbChbu0lMvpgGedAre_pflw6MtpE
+
+###
+
+### Obtener todas las órdenes (usuario autenticado) (Juan)
+GET http://localhost:5500/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGVlMmQzMmVhYjI5Nzg0MzI4NWM2OSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU4MTEwMzMsImV4cCI6MTc0ODQwMzAzM30.vhKB7PeXM7T1UwJfnwAMneDnf8dGXHWerDIwFVkV9tg
+
+###
+
+### Crear nueva orden (Juan)
+POST http://localhost:5500/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGVlMmQzMmVhYjI5Nzg0MzI4NWM2OSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU4MTEwMzMsImV4cCI6MTc0ODQwMzAzM30.vhKB7PeXM7T1UwJfnwAMneDnf8dGXHWerDIwFVkV9tg
+Content-Type: application/json
+
+{
+  "shippingAddress": {
+    "street": "Calle Falsa 123",
+    "city": "Ciudad X",
+    "postalCode": "12345",
+    "country": "México"
+  },
+  "items": [
+    {
+      "product": "67ef19312caa9b77534da7b0",
+      "quantity": 2
+    }
+  ]
+}
+
+###
+
+### Obtener orden por ID
+GET http://localhost:5500/api/orders/680ee6407e4084a88a9b0c88
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGVlMmQzMmVhYjI5Nzg0MzI4NWM2OSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU4MTEwMzMsImV4cCI6MTc0ODQwMzAzM30.vhKB7PeXM7T1UwJfnwAMneDnf8dGXHWerDIwFVkV9tg
