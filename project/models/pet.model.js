@@ -11,7 +11,8 @@ const PetSchema = new mongoose.Schema({
              enum: [ 'dog', 'cat', 'other' ]
     },
     place: { type: String, required: true},
-    date: { type: Date, default: Date.now}
+    date: { type: Date, default: Date.now},
+    image: { type: String, required: true}
 }, { timestamps: true });
 
 module.exports = mongoose.model('Pet', PetSchema);
