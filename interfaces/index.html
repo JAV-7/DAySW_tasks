@@ -26,13 +26,13 @@
         <br>
         <header>
             <h1 class="d-flex justify-content-center">
-            <b>
-                Paws & Hope
-            </b>
-            &nbsp;
+              <b>Paws & Hope</b>
+              &nbsp;
+              <button id="pingButton">Test Backend Connection</button>
             </h1>
-            
-        </header>
+            <p id="pingResult">Waiting for test...</p>
+          </header>
+          
         <br>
 
         <main>
@@ -141,6 +141,33 @@
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
+    <!-- Add this script to index.html -->
+<script>
+    document.getElementById("registerForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const email = document.getElementById("create-user").value;
+  
+      try {
+        const response = await fetch('http://localhost:3000/api/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+  
+        const data = await response.json();
+        
+        if (response.ok) {
+          localStorage.setItem('token', data.token); // Store token
+          window.location.href = 'picks.html'; // Redirect on success
+        } else {
+          alert(data.message || 'Login failed');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Network error');
+      }
+    });
+  </script>
     </body>
 </html>
 
