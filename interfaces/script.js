@@ -73,32 +73,44 @@ async function fetchPets() {
       console.log('Displayed Pets', pets); //debug
       
       // Display pets...
+      displayPets(pets);
     } catch (error) {
       console.error('Error:', error);
       // Redirect to login if token is invalid
-      if (error.message.includes('401')) || error.message.includes('403')) {
+      if (error.message.includes('401') || error.message.includes('403')) {
         localStorage.removeItem('token');
         window.location.href = 'index.html';
       }
     }
   }
+
 // Display Pets on UI 
 function displayPets(pets){
   const petsContainer = document.querySelector('.row.gy-3');
   
-  petsContainer.innerHTML = ''; // Clear existing pet cards (if any)
+  if (!petsContainer) {
+    console.error('Pets container not found');
+    return;
+  }
+  
+  petsContainer.innerHTML = ''; // Clear existing pet cards
+  
+  if (!pets || pets.length === 0) {
+    petsContainer.innerHTML = '<div class="col-12 text-center"><h3>No pets available at the moment</h3></div>';
+    return;
+  }
   
   pets.forEach(pet => { // Create and append pet cards for each pet
     const petCard = `
       <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
         <div class="card border-light">
-          <img src="${pet.imageUrl || 'https://via.placeholder.com/300'}" class="card-img-top" alt="${pet.name}">
+          <img src="${pet.image || 'https://via.placeholder.com/300'}" class="card-img-top" alt="${pet.name}">
           <div class="position-absolute top-0 start-0 p-2 text-white">
             <h4 class="card-title mb-0">${pet.name}</h4>
           </div>
           <div class="card-body">
             <h5 class="card-title">${pet.age}, ${pet.breed}</h5>
-            <p class="card-text text-muted">${pet.location}</p>
+            <p class="card-text text-muted">${pet.place}</p>
             <button class="btn btn-sm btn-outline-primary favorite-btn" onclick="toggleFavorite(this)" data-pet-id="${pet._id}" data-favorited="false">
               <i class="bi bi-heart"></i>
             </button>
@@ -113,8 +125,16 @@ function displayPets(pets){
 
 // Call when picks.html loads
 document.addEventListener('DOMContentLoaded', function() {
-  if (checkAuth()) {
+// Check if we're on the picks page by looking for the pet container
+  const petsContainer = document.querySelector('.row.gy-3');
+  
+  if (petsContainer && checkAuth()) {
     fetchPets();
+  }
+  // Check if signup form exists before adding event listener
+  const signupForm = document.getElementById("signupForm");
+  if (signupForm) {
+    signupForm.addEventListener("submit", handleSignup);
   }
 });
 
