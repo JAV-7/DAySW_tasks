@@ -107,19 +107,51 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
+// loginUser function in user.controller.js
 exports.loginUser = async (req, res) => {
+    console.log('Login attempt for:', req.body.email);
+    
+    if (!req.body || !req.body.email || !req.body.password) {
+        console.log('Missing login fields:', req.body);
+        return res.status(400).json({ error: 'Email and password required' });
+    }
+    
     const { email, password } = req.body;
+    
     try {
         const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ error: 'Invalid credentials' });
-
+        if (!user) {
+            console.log('User not found:', email);
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        console.log('Found user, checking password');
         const isMatch = await user.comparePassword(password);
-        if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
-
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '30d' });
+        
+        if (!isMatch) {
+            console.log('Password mismatch for:', email);
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+        
+        // Use JWT_SECRET with fallback for development
+        const jwtSecret = process.env.JWT_SECRET || '123xyz';
+        
+        const token = jwt.sign(
+            { id: user._id, email: user.email, role: user.role },
+            jwtSecret,
+            { expiresIn: '1h' }
+        );
+        
+        console.log('Login successful for:', email);
         res.json({ token });
-    } catch (err) {
-        res.status(500).json({ error: 'Server Error' });
+        
+    } catch (error) {
+        console.error('Login error details:', error);
+        res.status(500).json({ 
+            error: 'Server Error', 
+            message: error.message,
+            stack: process.env.NODE_ENV === 'production' ? '🥞' : error.stack 
+        });
     }
 };
 
