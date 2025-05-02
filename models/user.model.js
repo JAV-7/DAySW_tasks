@@ -2,21 +2,25 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: { 
+        type: String, 
+        required: [true, 'Name is required'] },
     email: { 
         type: String, 
-        required: true, 
+        required: [true, 'Email is required'], 
         unique: true,
         match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
      },
-    password: { type: String, required: true },
-    role: { type: String, 
-            required: true,
-            enum: [ 'admin', 'client' ], // enum used to restrict role
-            default: 'client'
+    password: { type: String, required: [true, 'Password is required'] },
+    role: { 
+        type: String, 
+        required: true,
+        enum: [ 'admin', 'client' ], // enum used to restrict role
+        default: 'client'
         }
 }, { timestamps: true });
 
+// hash password
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     const salt = await bcrypt.genSalt(10);
@@ -24,6 +28,7 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
+// method to compare passwords
 userSchema.methods.comparePassword = function (password) {
     return bcrypt.compare(password, this.password);
 };

@@ -4,10 +4,68 @@ const jwt = require('jsonwebtoken');
 // Create User
 exports.createUser = async (req, res) => {
     try {
-        const user = await User.create(req.body);
-        res.status(201).json(user);
+        const { name, email, password } = req.body;
+
+        // Validate required fields
+        if (!name || !email || !password) {
+            return res.status(400).json({ 
+                error: "Validation failed",
+                details: {
+                    name: !name ? "Name is required" : undefined,
+                    email: !email ? "Email is required" : undefined,
+                    password: !password ? "Password is required" : undefined
+                }
+            });
+        }
+
+        // Check if user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ 
+                error: "Validation failed",
+                details: {
+                    email: "Email already in use"
+                }
+            });
+        }
+
+        // Create new user
+        const user = await User.create({ name, email, password });
+        
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: user._id, email: user.email, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        // Don't send password back
+        user.password = undefined;
+
+        res.status(201).json({
+            status: 'success',
+            token,
+            data: {
+                user
+            }
+        });
+
     } catch (err) {
-        res.status(400).json({ error: err.message });
+        // Handle Mongoose validation errors
+        if (err.name === 'ValidationError') {
+            const errors = {};
+            Object.keys(err.errors).forEach(key => {
+                errors[key] = err.errors[key].message;
+            });
+            return res.status(400).json({ 
+                error: "Validation failed",
+                details: errors
+            });
+        }
+        res.status(500).json({ 
+            error: "Server error",
+            message: err.message 
+        });
     }
 };
 
@@ -38,7 +96,6 @@ exports.updateUser = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 };
-
 
 exports.deleteUser = async (req, res) => {
     try {

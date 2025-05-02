@@ -1,18 +1,21 @@
-// Load environment variables first
-require('dotenv').config();
+// STARTING FILE FOR SERVER. TO RUN, TYPE 'node server.js' 
+require('dotenv').config(); // Load environment variables first
 
 const express = require('express');
+const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-const app = express();
 
-app.use(cors()); //  ENABLES CORS
+
+app.use(cors({ // Enables CORS for security purposes
+  origin: 'http://localhost:5500', // or your frontend origin
+  credentials: true
+}));
 app.use(express.json()); // to parse JSON from frontend
 
 
-// Basic MongoDB connection (replace with your database.js if preferred)
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGODB_URI, { // Basic MongoDB connection 
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -21,7 +24,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 app.use(express.static(path.join(__dirname, 'interfaces')));
 
-// Routes
+// ROUTES
 const userRoutes = require('./routes/user.route');
 const petRoutes = require('./routes/pet.route');
 const adoptionRoutes = require('./routes/adoption.route');
@@ -32,19 +35,20 @@ app.use('/api/pets', petRoutes);
 app.use('/api/adoptions', adoptionRoutes);
 app.use('/api/favorites', favoriteRoutes);
 
-// Basic error handling
-app.use((err, req, res, next) => {
+
+app.use((err, req, res, next) => { // Basic error handling
   console.error(err.stack);
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-// Start server
+// START SERVER ON PORT 3000
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-//test
+
+// debug test
 app.get('/api/ping', (req, res) => {
   res.json({ message: 'Backend activated' });
   console.log('Ping received from frontend!');

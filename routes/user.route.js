@@ -3,11 +3,11 @@ const router = express.Router();
 const userController = require('../controllers/user.controller');
 const { verifyToken } = require('../middleware/auth.middleware.js');
 const { authorizeRole, isOwnerOrAdmin } = require('../middleware/roles.middleware.js');
+const User = require('../models/user.model'); 
+const jwt = require('jsonwebtoken'); 
 
 //Publico
 router.post('/', userController.createUser);
-router.post('/login', userController.loginUser);
-
 
 //Admin
 router.get('/', verifyToken, authorizeRole(['admin']), userController.getUsers);
@@ -17,7 +17,7 @@ router.delete('/:id', verifyToken, authorizeRole(['admin']), userController.dele
 router.get('/:id', verifyToken, isOwnerOrAdmin, userController.getUserById);
 router.put('/:id', verifyToken, isOwnerOrAdmin, userController.updateUser);
 
-// Login route (using bcrypt password comparison)
+// Login route (using bcrypt password )
 router.post('/login', async (req, res) => {
     console.log('Received login request with body:', req.body);
     
@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
       
       const token = jwt.sign(
         { id: user._id, email: user.email, role: user.role },
-        process.env.JWT_SECRET || '123xyz', // Fallback to your test secret
+        process.env.JWT_SECRET || '123xyz', // Fallback to secret
         { expiresIn: '1h' }
       );
       
@@ -59,5 +59,5 @@ router.post('/login', async (req, res) => {
       res.status(500).json({ error: "Server error" });
     }
   });
-  
+
 module.exports = router;
