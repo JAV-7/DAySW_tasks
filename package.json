@@ -1,5 +1,14 @@
 {
   "dependencies": {
+<<<<<<< HEAD
+=======
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.14.1",
+>>>>>>> 0120f7e75ab43581de12b7724338bba3e195dea5
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   }

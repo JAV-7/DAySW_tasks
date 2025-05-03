@@ -1,0 +1,66 @@
+/*Ie. de pseudoclase, ":hover", ":checked"*/
+/*
+:hover
+:checked
+:first-child
+:last-child
++ others
+*/
+
+
+/* Pseudoelementos
+p::before
+
+p::after
+
+
+*/
+
+p::before{
+    content: "France";
+    color: red;
+}
+
+p::after{
+    content: "France";
+    color: blue;
+}
+
+[class]{/*Modify all clases*/
+    background-color: green;
+}
+
+[class~="test"]{
+    /*Modify all classes that contain "test"*/
+    background-color: green;
+}
+
+[class="test"]{
+    /*Modify all classes that are exactly "test"*/
+    background-color: green;
+}
+
+[class^="test"]{
+    /*Modify all classes that start with "test"*/
+    background-color: green;
+}
+
+[class$="test"]{
+    /*Modify all classes that end with "test"*/
+    background-color: green;
+}
+
+[class*="test"]{
+    /*Modify all classes that contain "test"*/
+    background-color: green;
+}
+
+h1[class]{
+    /*Modify all h1 elements that have a class*/
+    background-color: green;
+}
+
+h1[class~="test"]{
+    /*Modify all h1 elements that have a class that contains "test"*/
+    background-color: green;
+}
