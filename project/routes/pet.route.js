@@ -13,7 +13,7 @@ router.post(
     '/',
     verifyToken,
     upload.single('image'),
-    petController.createPet
+    createPet
   );
 
 //Only admin

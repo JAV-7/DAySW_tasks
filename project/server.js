@@ -13,6 +13,7 @@ app.use(cors({ // Enables CORS for security purposes
   credentials: true
 }));
 app.use(express.json()); // to parse JSON from frontend
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // ensures images can be accessed
 
 
 mongoose.connect(process.env.MONGODB_URI, { // Basic MongoDB connection 
@@ -34,7 +35,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/pets', petRoutes);
 app.use('/api/adoptions', adoptionRoutes);
 app.use('/api/favorites', favoriteRoutes);
-app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use((err, req, res, next) => { // Basic error handling
   console.error(err.stack);
