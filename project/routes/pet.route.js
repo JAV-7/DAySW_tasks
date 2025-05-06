@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const petController = require('../controllers/pet.controller');
-const upload = require('../api/upload');
+const upload = require('../middlewares/upload');
+const { createPet } = require('../controllers/petController');
 const { verifyToken } = require('../middleware/auth.middleware');
 const { authorizeRole } = require('../middleware/roles.middleware');
 

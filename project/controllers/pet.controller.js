@@ -3,18 +3,22 @@ const Pet = require('../models/pet.model');
 //Create pet
 exports.createPet = async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ message: 'Image file is required' });
+        const { name, age, gender, breed, species, place } = req.body;
+        const file = req.file;
+
+        if (!file) {
+        return res.status(400).json({ message: 'Image file is required.' });
         }
 
-        const petData = {
-            name: req.body.name,
-            age: req.body.age,
-            gender: req.body.gender,
-            breed: req.body.breed,
-            species: req.body.species,
-            place: req.body.place,
-            image: `/api/uploads/${req.file.filename}` 
+
+        const newPet = {
+        name,
+        age,
+        gender,
+        breed,
+        species,
+        place,
+        image: file.filename, 
         };
 
         const pet = await Pet.create(petData);

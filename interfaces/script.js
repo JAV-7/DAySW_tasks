@@ -1,4 +1,5 @@
 // FRONTEND FUNCTIONALITY SCRIPTS
+const API_URL = 'http://localhost:3000'; 
 
 // Checking Authentication 
 function checkAuth() {
@@ -11,99 +12,159 @@ function checkAuth() {
 }
 
 // Nav bar toggler
-const toggler = document.querySelector(".toggler-btn");
-toggler.addEventListener("click", function () {
-  document.querySelector("#sidebar").classList.toggle("collapsed");
+document.addEventListener('DOMContentLoaded', function() {
+  const toggler = document.querySelector(".toggler-btn");
+  if (toggler) {
+    toggler.addEventListener("click", function () {
+      document.querySelector("#sidebar").classList.toggle("collapsed");
+    });
+  }
 });
 
 // Favorite button event
-async function toggleFavorite(button) {
-  const petId = button.getAttribute('data-pet-id');
+function toggleFavorite(button) {
   const isFavorited = button.getAttribute('data-favorited') === 'true';
-  const icon = button.querySelector('i');
+  const petCard = button.closest('.card');
+  const petId = petCard.getAttribute('data-pet-id'); // More reliable than dataset
+  
+  if (!petId) {
+    console.error('Pet ID not found');
+    return;
+  }
+  
+  // Get the token from localStorage
   const token = localStorage.getItem('token');
-
-  try {
-    const endpoint = isFavorited ? 
-      `http://localhost:3000/api/favorites/${petId}` : 
-      'http://localhost:3000/api/favorites';
-    
-    const method = isFavorited ? 'DELETE' : 'POST';
-    
-    const response = await fetch(endpoint, {
-      method,
+  if (!token) {
+    alert('You need to be logged in to manage favorites');
+    return;
+  }
+  
+  if (isFavorited) {
+    // Remove from favorites
+    fetch(`${API_URL}/api/favorites/${petId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        button.setAttribute('data-favorited', 'false');
+        button.innerHTML = '<i class="bi bi-heart"></i>';
+        
+        // If on favorites page, optionally remove the card
+        if (window.location.pathname.includes('fav_picks.html')) {
+          petCard.remove();
+          
+          // Check if there are no more favorite pets
+          const petsContainer = document.querySelector('.row.gy-3');
+          if (petsContainer && petsContainer.children.length === 0) {
+            petsContainer.innerHTML = `
+              <div class="col-12 text-center">
+                <h3>You haven't favorited any pets yet</h3>
+                <p>Click the heart icon on pets to add them to your favorites</p>
+              </div>
+            `;
+          }
+        }
+      } else {
+        console.error('Failed to remove from favorites');
+      }
+    })
+    .catch(err => {
+      console.error('Error removing favorite:', err);
+    });
+  } else {
+    // Add to favorites
+    fetch(`${API_URL}/api/favorites`, {
+      method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: !isFavorited ? JSON.stringify({ petId }) : null
+      body: JSON.stringify({ petId })
+    })
+    .then(response => {
+      if (response.ok) {
+        button.setAttribute('data-favorited', 'true');
+        button.innerHTML = '<i class="bi bi-heart-fill text-danger"></i>';
+      } else {
+        console.error('Failed to add to favorites');
+      }
+    })
+    .catch(err => {
+      console.error('Error adding favorite:', err);
     });
-
-    if (!response.ok) throw new Error('Failed to update favorite');
-
-    if (isFavorited) {
-      icon.classList.remove('bi-heart-fill');
-      icon.classList.add('bi-heart');
-      button.setAttribute('data-favorited', 'false');
-    } else {
-      icon.classList.remove('bi-heart');
-      icon.classList.add('bi-heart-fill');
-      button.setAttribute('data-favorited', 'true');
-    }
-    
-  } catch (error) {
-    console.error('Error:', error);
-    alert('Failed to update favorite. Please try again.');
   }
 }
 
-// Fetching Pets from backend
-async function fetchPets() {
-    try {
-      const token = localStorage.getItem('token'); // requests token 
-      const response = await fetch('http://localhost:3000/api/pets', {
-        headers: {
-          'Authorization': `Bearer ${token}` // gets token
-        }
-      });
-      
-      if (!response.ok) throw new Error('Failed to fetch pets'); // if token is not admin
-      
-      const pets = await response.json(); // else... await data and convert to json format
-      console.log('Displayed Pets', pets); //debug
-      
-      // Display pets...
-      displayPets(pets);
-    } catch (error) {
-      console.error('Error:', error);
-      // Redirect to login if token is invalid
-      if (error.message.includes('401') || error.message.includes('403')) {
-        localStorage.removeItem('token');
-        window.location.href = 'index.html';
-      }
+// Fetch and display favorite pets
+async function fetchFavoritePets() {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No authentication token found');
+      window.location.href = 'index.html';
+      return;
     }
+    
+    const response = await fetch(`${API_URL}/api/favorites`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) throw new Error(`Failed to fetch favorites: ${response.status}`);
+    
+    const pets = await response.json();
+    console.log('Favorite Pets:', pets);
+    
+    displayFavoritePets(pets);
+  } catch (error) {
+    console.error('Error:', error);
+    handleFavoriteError(error);
   }
+}
 
-// Display Pets on UI 
-function displayPets(pets){
-  const petsContainer = document.querySelector('.row.gy-3');
+// Special display function for favorites page
+function displayFavoritePets(pets) {
+  // Find the container for the pets
+  // Note: In fav_picks.html, you might be missing a proper container with this class
+  let petsContainer = document.querySelector('.row.gy-3');
   
+  // If the container doesn't exist, create it
   if (!petsContainer) {
-    console.error('Pets container not found');
-    return;
+    console.log('Creating pets container because it was not found');
+    // Find the main content area
+    const mainContent = document.querySelector('main');
+    if (mainContent) {
+      // Create and append the container
+      petsContainer = document.createElement('div');
+      petsContainer.className = 'row gy-3';
+      mainContent.appendChild(petsContainer);
+    } else {
+      console.error('Main content area not found');
+      return;
+    }
   }
   
   petsContainer.innerHTML = ''; // Clear existing pet cards
   
   if (!pets || pets.length === 0) {
-    petsContainer.innerHTML = '<div class="col-12 text-center"><h3>No pets available at the moment</h3></div>';
+    petsContainer.innerHTML = `
+      <div class="col-12 text-center">
+        <h3>You haven't favorited any pets yet</h3>
+        <p>Click the heart icon on pets to add them to your favorites</p>
+      </div>
+    `;
     return;
   }
   
-  pets.forEach(pet => { // Create and append pet cards for each pet
+  pets.forEach(pet => {
     const petCard = `
       <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-        <div class="card border-light">
+        <div class="card border-light" data-pet-id="${pet._id}">
           <img src="${pet.image || 'https://via.placeholder.com/300'}" class="card-img-top" alt="${pet.name}">
           <div class="position-absolute top-0 start-0 p-2 text-white">
             <h4 class="card-title mb-0">${pet.name}</h4>
@@ -111,8 +172,11 @@ function displayPets(pets){
           <div class="card-body">
             <h5 class="card-title">${pet.age}, ${pet.breed}</h5>
             <p class="card-text text-muted">${pet.place}</p>
-            <button class="btn btn-sm btn-outline-primary favorite-btn" onclick="toggleFavorite(this)" data-pet-id="${pet._id}" data-favorited="false">
-              <i class="bi bi-heart"></i>
+            <button class="btn btn-sm btn-outline-primary favorite-btn" 
+                    onclick="toggleFavorite(this)" 
+                    data-pet-id="${pet._id}" 
+                    data-favorited="true">
+              <i class="bi bi-heart-fill text-danger"></i>
             </button>
             <a href="selected_pick.html?id=${pet._id}" class="stretched-link"></a>
           </div>
@@ -123,75 +187,182 @@ function displayPets(pets){
   });
 }
 
-// Call when picks.html loads
-document.addEventListener('DOMContentLoaded', function() {
-// Check if we're on the picks page by looking for the pet container
+// Error handler for favorites
+function handleFavoriteError(error) {
+  if (error.message.includes('401') || error.message.includes('403')) {
+    localStorage.removeItem('token');
+    window.location.href = 'index.html';
+  } else {
+    const petsContainer = document.querySelector('.row.gy-3');
+    if (petsContainer) {
+      petsContainer.innerHTML = `
+        <div class="col-12 text-center">
+          <h3>Error loading favorites</h3>
+          <p>Please try again later</p>
+          <div class="text-danger">${error.message}</div>
+        </div>
+      `;
+    }
+  }
+}
+
+// Fetching Pets from backend
+async function fetchPets() {
+  try {
+    const token = localStorage.getItem('token'); // requests token 
+    const response = await fetch(`${API_URL}/api/pets`, {
+      headers: {
+        'Authorization': `Bearer ${token}` // gets token
+      }
+    });
+    
+    if (!response.ok) throw new Error(`Failed to fetch pets: ${response.status}`); // if token is not admin
+    
+    const pets = await response.json(); // else... await data and convert to json format
+    console.log('Displayed Pets', pets); //debug
+    
+    // Display pets...
+    displayPets(pets);
+  } catch (error) {
+    console.error('Error:', error);
+    // Redirect to login if token is invalid
+    if (error.message.includes('401') || error.message.includes('403')) {
+      localStorage.removeItem('token');
+      window.location.href = 'index.html';
+    }
+  }
+}
+
+// Display Pets on UI 
+function displayPets(pets) {
   const petsContainer = document.querySelector('.row.gy-3');
   
-  if (petsContainer && checkAuth()) {
+  if (!petsContainer) {
+    console.error('Pets container not found');
+    return;
+  }
+  
+  petsContainer.innerHTML = '';
+  
+  if (!pets || pets.length === 0) {
+    petsContainer.innerHTML = '<div class="col-12 text-center"><h3>No pets available</h3></div>';
+    return;
+  }
+  
+  pets.forEach(pet => {
+    const isFavorited = pet.isFavorited || false;
+    const heartIcon = isFavorited ? 'bi-heart-fill text-danger' : 'bi-heart';
+    
+    const petCard = `
+      <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="card border-light" data-pet-id="${pet._id}">
+          <img src="${pet.image || 'https://via.placeholder.com/300'}" class="card-img-top" alt="${pet.name}">
+          <div class="position-absolute top-0 start-0 p-2 text-white">
+            <h4 class="card-title mb-0">${pet.name}</h4>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">${pet.age}, ${pet.breed}</h5>
+            <p class="card-text text-muted">${pet.place}</p>
+            <button class="btn btn-sm btn-outline-primary favorite-btn" 
+                    onclick="toggleFavorite(this)" 
+                    data-pet-id="${pet._id}" 
+                    data-favorited="${isFavorited}">
+              <i class="bi ${heartIcon}"></i>
+            </button>
+            <a href="selected_pick.html?id=${pet._id}" class="stretched-link"></a>
+          </div>
+        </div>
+      </div>
+    `;
+    petsContainer.insertAdjacentHTML('beforeend', petCard);
+  });
+}
+
+// Call when html loads
+document.addEventListener('DOMContentLoaded', function() {
+  if (!checkAuth()) return;
+  
+  // Check which page we're on by looking at the URL path
+  const currentPath = window.location.pathname;
+  console.log('Current path:', currentPath);
+  
+  if (currentPath.endsWith('fav_picks.html') || currentPath.includes('/fav_picks')) {
+    console.log('On favorites page, fetching favorite pets');
+    fetchFavoritePets();
+  } else if (currentPath.endsWith('picks.html') || currentPath.includes('/picks') || currentPath === '/' || currentPath === '') {
+    console.log('On main picks page, fetching all pets');
     fetchPets();
   }
+  
   // Check if signup form exists before adding event listener
   const signupForm = document.getElementById("signupForm");
   if (signupForm) {
-    signupForm.addEventListener("submit", handleSignup);
+    signupForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      handleSignup(e);
+    });
   }
 });
 
-// Signup event
-document.getElementById("signupForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  
-  // Get form values
-  const name = document.getElementById("signupName").value.trim();
-  const email = document.getElementById("signupEmail").value.trim();
-  const password = document.getElementById("signupPassword").value;
-  const confirmPassword = document.getElementById("confirmPassword").value;
-
-  // Client-side validation
-  if (!name || !email || !password || !confirmPassword) {
-      alert("Please fill in all fields");
-      return;
-  }
-
-  if (password !== confirmPassword) {
-      alert("Passwords don't match!");
-      return;
-  }
-
-  try {
-      // Show loading state
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating account...';
-
-      const response = await fetch('http://localhost:3000/api/users', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ name, email, password })
-      });
-
-      const data = await response.json();
+// Only add signup event listener if the element exists
+document.addEventListener('DOMContentLoaded', function() {
+  const signupForm = document.getElementById("signupForm");
+  if (signupForm) {
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
       
-      if (response.ok) {
-          alert("Account created successfully! Please login.");
-          document.getElementById("signupForm").reset();
-          
-          // Auto-open login modal after successful signup
-          const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-          loginModal.show();
-      } else {
-          alert(data.error || "Signup failed. Please try again.");
+      // Get form values
+      const name = document.getElementById("signupName").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const password = document.getElementById("signupPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      // Client-side validation
+      if (!name || !email || !password || !confirmPassword) {
+          alert("Please fill in all fields");
+          return;
       }
-  } catch (error) {
-      console.error("Signup error:", error);
-      alert("Network error. Please check your connection.");
-  } finally {
-      // Reset button state
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Sign Up';
+
+      if (password !== confirmPassword) {
+          alert("Passwords don't match!");
+          return;
+      }
+
+      try {
+          // Show loading state
+          const submitBtn = e.target.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating account...';
+
+          const response = await fetch(`${API_URL}/api/users`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ name, email, password })
+          });
+
+          const data = await response.json();
+          
+          if (response.ok) {
+              alert("Account created successfully! Please login.");
+              document.getElementById("signupForm").reset();
+              
+              // Auto-open login modal after successful signup
+              const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+              loginModal.show();
+          } else {
+              alert(data.error || "Signup failed. Please try again.");
+          }
+      } catch (error) {
+          console.error("Signup error:", error);
+          alert("Network error. Please check your connection.");
+      } finally {
+          // Reset button state
+          const submitBtn = e.target.querySelector('button[type="submit"]');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign Up';
+      }
+    });
   }
 });
