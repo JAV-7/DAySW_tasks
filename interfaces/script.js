@@ -24,78 +24,90 @@ document.addEventListener('DOMContentLoaded', function() {
 // Favorite button event
 function toggleFavorite(button) {
   const isFavorited = button.getAttribute('data-favorited') === 'true';
-  const petCard = button.closest('.card');
-  const petId = petCard.getAttribute('data-pet-id'); // More reliable than dataset
+  // Get pet ID - works for both card and detail page
+  const petId = button.getAttribute('data-pet-id') || 
+               button.closest('.card')?.getAttribute('data-pet-id');
   
   if (!petId) {
-    console.error('Pet ID not found');
-    return;
+      console.error('Pet ID not found');
+      return;
   }
   
   // Get the token from localStorage
   const token = localStorage.getItem('token');
   if (!token) {
-    alert('You need to be logged in to manage favorites');
-    return;
+      alert('You need to be logged in to manage favorites');
+      return;
   }
   
   if (isFavorited) {
-    // Remove from favorites
-    fetch(`${API_URL}/api/favorites/${petId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      if (response.ok) {
-        button.setAttribute('data-favorited', 'false');
-        button.innerHTML = '<i class="bi bi-heart"></i>';
-        
-        // If on favorites page, optionally remove the card
-        if (window.location.pathname.includes('fav_picks.html')) {
-          petCard.remove();
-          
-          // Check if there are no more favorite pets
-          const petsContainer = document.querySelector('.row.gy-3');
-          if (petsContainer && petsContainer.children.length === 0) {
-            petsContainer.innerHTML = `
-              <div class="col-12 text-center">
-                <h3>You haven't favorited any pets yet</h3>
-                <p>Click the heart icon on pets to add them to your favorites</p>
-              </div>
-            `;
+      // Remove from favorites
+      fetch(`${API_URL}/api/favorites/${petId}`, {
+          method: 'DELETE',
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
           }
-        }
-      } else {
-        console.error('Failed to remove from favorites');
-      }
-    })
-    .catch(err => {
-      console.error('Error removing favorite:', err);
-    });
+      })
+      .then(response => {
+          if (response.ok) {
+              button.setAttribute('data-favorited', 'false');
+              // Update icon based on button location
+              if (button.closest('.favorite-container')) {
+                  button.innerHTML = '<i class="bi bi-heart"></i>';
+              } else {
+                  button.innerHTML = '<i class="bi bi-heart"></i>';
+              }
+              
+              // If on favorites page, optionally remove the card
+              if (window.location.pathname.includes('fav_picks.html')) {
+                  const petCard = button.closest('.card');
+                  if (petCard) petCard.remove();
+                  
+                  // Check if there are no more favorite pets
+                  const petsContainer = document.querySelector('.row.gy-3');
+                  if (petsContainer && petsContainer.children.length === 0) {
+                      petsContainer.innerHTML = `
+                          <div class="col-12 text-center">
+                              <h3>You haven't favorited any pets yet</h3>
+                              <p>Click the heart icon on pets to add them to your favorites</p>
+                          </div>
+                      `;
+                  }
+              }
+          } else {
+              console.error('Failed to remove from favorites');
+          }
+      })
+      .catch(err => {
+          console.error('Error removing favorite:', err);
+      });
   } else {
-    // Add to favorites
-    fetch(`${API_URL}/api/favorites`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ petId })
-    })
-    .then(response => {
-      if (response.ok) {
-        button.setAttribute('data-favorited', 'true');
-        button.innerHTML = '<i class="bi bi-heart-fill text-danger"></i>';
-      } else {
-        console.error('Failed to add to favorites');
-      }
-    })
-    .catch(err => {
-      console.error('Error adding favorite:', err);
-    });
+      // Add to favorites
+      fetch(`${API_URL}/api/favorites`, {
+          method: 'POST',
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ petId })
+      })
+      .then(response => {
+          if (response.ok) {
+              button.setAttribute('data-favorited', 'true');
+              // Update icon based on button location
+              if (button.closest('.favorite-container')) {
+                  button.innerHTML = '<i class="bi bi-heart-fill text-danger"></i>';
+              } else {
+                  button.innerHTML = '<i class="bi bi-heart-fill text-danger"></i>';
+              }
+          } else {
+              console.error('Failed to add to favorites');
+          }
+      })
+      .catch(err => {
+          console.error('Error adding favorite:', err);
+      });
   }
 }
 
@@ -278,6 +290,118 @@ function displayPets(pets) {
   });
 }
 
+// Fetch and display single pet details
+async function fetchAndDisplayPetDetails() {
+  try {
+      // Get pet ID from URL query parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const petId = urlParams.get('id');
+      
+      if (!petId) {
+          throw new Error('No pet ID provided in URL');
+      }
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+          window.location.href = 'index.html';
+          return;
+      }
+
+      // Fetch pet details
+      const response = await fetch(`${API_URL}/api/pets/${petId}`, {
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error(`Failed to fetch pet: ${response.status}`);
+      }
+
+      const pet = await response.json();
+      displayPetDetails(pet);
+  } catch (error) {
+      console.error('Error:', error);
+      handlePetDetailsError(error);
+  }
+}
+
+// Display pet details on the page
+async function displayPetDetails(pet) {
+  const container = document.getElementById('petDetailsContainer');
+  if (!container) return;
+
+  // Check if pet is favorited
+  let isFavorited = false;
+  try {
+      const token = localStorage.getItem('token');
+      if (token) {
+          const response = await fetch(`${API_URL}/api/favorites`, {
+              headers: {
+                  'Authorization': `Bearer ${token}`
+              }
+          });
+          
+          if (response.ok) {
+              const favorites = await response.json();
+              isFavorited = favorites.some(fav => fav._id === pet._id);
+          }
+      }
+  } catch (error) {
+      console.error('Error checking favorite status:', error);
+  }
+  
+  container.innerHTML = `
+      <!-- Pet Image -->
+      <div class="favorite-container me-4">
+          <img class="align-self-center rounded" 
+               src="${pet.image}" 
+               alt="${pet.name}">
+          <button class="favorite-btn" 
+                  data-favorited="${isFavorited}" 
+                  onclick="toggleFavorite(this)"
+                  data-pet-id="${pet._id}">
+              <i class="bi ${isFavorited ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>
+          </button>
+      </div>
+        
+      <!-- Pet Description -->
+      <div class="media-body me-5">
+          <h4 class="mt-0">${pet.name}</h4>
+          <h1 class="mt-0 fw-bold">${pet.age} year old, ${pet.breed}</h1>
+          <br>
+          <p class="text-muted">${pet.description || 'No description available'}</p>
+          <br>
+          <div class="d-flex align-items-center mb-3">
+              <i class="lni lni-location-arrow-right me-2"></i>
+              <span>${pet.place}</span>
+          </div>
+          <a href="chat.html?petId=${pet._id}" class="btn btn-dark btn-lg btn-block w-100">
+          Adopt!
+          </a>
+      </div>
+  `;
+}
+
+// Error handling for pet details
+function handlePetDetailsError(error) {
+  const container = document.getElementById('petDetailsContainer');
+  if (!container) return;
+
+  if (error.message.includes('401') || error.message.includes('403')) {
+      localStorage.removeItem('token');
+      window.location.href = 'index.html';
+  } else {
+      container.innerHTML = `
+          <div class="col-12 text-center">
+              <h3>Error loading pet details</h3>
+              <p>${error.message}</p>
+              <a href="picks.html" class="btn btn-primary">Back to Pets</a>
+          </div>
+      `;
+  }
+}
+
 // Call when html loads
 document.addEventListener('DOMContentLoaded', function() {
   if (!checkAuth()) return;
@@ -292,6 +416,8 @@ document.addEventListener('DOMContentLoaded', function() {
   } else if (currentPath.endsWith('picks.html') || currentPath.includes('/picks') || currentPath === '/' || currentPath === '') {
     console.log('On main picks page, fetching all pets');
     fetchPets();
+  } else if (currentPath.endsWith('selected_pick.html') || currentPath.includes('/selected_pick')) {
+    fetchAndDisplayPetDetails();
   }
   
   // Check if signup form exists before adding event listener

@@ -13,6 +13,7 @@ app.use(cors({ // Enables CORS for security purposes
   credentials: true
 }));
 app.use(express.json()); // to parse JSON from frontend
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); 
 
 
 mongoose.connect(process.env.MONGODB_URI, { // Basic MongoDB connection 
@@ -46,7 +47,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
 
 // debug test
 app.get('/api/ping', (req, res) => {

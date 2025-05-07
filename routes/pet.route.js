@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../middlewares/upload');
 const petController = require('../controllers/pet.controller');
 const { verifyToken } = require('../middleware/auth.middleware');
 const { authorizeRole } = require('../middleware/roles.middleware');
@@ -9,6 +10,12 @@ router.get('/:id', verifyToken, petController.getPetById);
 router.get('/species/:species', verifyToken, petController.getPetBySpecies);
 router.get('/breed/:breed', verifyToken, petController.getPetByBreed);
 router.post('/', verifyToken, petController.createPet);
+router.post(
+    '/',
+    verifyToken,
+    upload.single('image'),
+    createPet
+  );
 
 //Only admin
 router.put('/:id', verifyToken, authorizeRole(['admin']), petController.updatePet);

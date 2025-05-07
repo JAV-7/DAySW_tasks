@@ -79,3 +79,18 @@ exports.getUserFavorites = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+exports.checkFavoriteStatus = async (req, res) => {
+  try {
+      const { petId } = req.params;
+      
+      const favorite = await Favorite.findOne({
+          user: req.user.id,
+          pet: petId
+      });
+
+      res.status(200).json({ isFavorited: !!favorite });
+  } catch (err) {
+      res.status(400).json({ error: err.message });
+  }
+};
