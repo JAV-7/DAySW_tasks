@@ -6,10 +6,12 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const { authorizeRole } = require('./middleware/roles.middleware');
+const { verifyToken } = require('./middleware/auth.middleware');
 
 
 app.use(cors({ // Enables CORS for security purposes
-  origin: 'http://localhost:5500', // or your frontend origin
+  origin: 'http://localhost:3000', // or your frontend origin
   credentials: true
 }));
 app.use(express.json()); // to parse JSON from frontend
@@ -46,6 +48,11 @@ app.use((err, req, res, next) => { // Basic error handling
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+// ROUTE TO ADMIN DASHBOARD
+app.get('/admin/dashboard', verifyToken, authorizeRole(['admin']), (req, res) => {
+  res.sendFile(path.join(__dirname, 'interfaces/admin_dashboard.html'));
 });
 
 // debug test

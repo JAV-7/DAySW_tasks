@@ -1,6 +1,6 @@
 const Pet = require('../models/pet.model');
 
-//Create pet
+//Create pet 
 exports.createPet = async (req, res) => {
     try {
         const pet = await Pet.create(req.body);
@@ -51,28 +51,57 @@ exports.getPetById = async (req, res) => {
     }
 };
 
-//Update pet
-exports.updatePet = async (req, res) =>{
+//Update pet (admin)
+exports.updatePet = async (req, res) => {
     try {
-        const pet = await Pet.findByIdAndUpdate(req.params.id, req.body, { 
-            new: true,
-            runValidators: true 
-        });
+        const pet = await Pet.findByIdAndUpdate(
+            req.params.id, 
+            req.body, 
+            { 
+                new: true,
+                runValidators: true 
+            }
+        );
         if (!pet) return res.status(404).json({ message: "Pet not found!" });
-        res.status(200).json(pet);
+        res.status(200).json({
+            status: 'success',
+            data: {
+                pet
+            }
+        });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(val => val.message);
+            return res.status(400).json({
+                status: 'error',
+                message: 'Validation failed',
+                details: messages
+            });
+        }
+        res.status(500).json({
+            status: 'error',
+            message: error.message
+        });
     }
 };
 
-//Delete pet
-exports.deletePet = async (req, res) =>{
+//Delete pet (admin)
+exports.deletePet = async (req, res) => {
     try {
         const pet = await Pet.findByIdAndDelete(req.params.id);
-        if(!pet) return res.status(400).json( { message: "Pet not found! " });
-        res.status(200).json( { message: "Pet has been removed from database!" });
+        if(!pet) return res.status(404).json({ 
+            status: 'error',
+            message: "Pet not found!" 
+        });
+        res.status(200).json({ 
+            status: 'success',
+            message: "Pet successfully deleted",
+            data: null
+        });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({
+            status: 'error',
+            message: error.message
+        });
     }
 };
-
